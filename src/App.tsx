@@ -1,6 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { addState } from "ad-hok";
+import { get } from "lodash/fp";
+
+const fOfP = <A, B>(a: A) => (b: B) => b;
+
+const t = fOfP(1)(3);
+
+const testFunc = addState("name", "setName", "hello")({ someProps: 3 });
 
 const App: React.FC = () => {
   return (
@@ -21,6 +29,6 @@ const App: React.FC = () => {
       </header>
     </div>
   );
-}
+};
 
 export default App;
