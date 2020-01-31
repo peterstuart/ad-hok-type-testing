@@ -1,14 +1,15 @@
-declare module "ad-hok" {
+declare module 'ad-hok' {
   type AddStateType = <
     TState,
     TStateName extends string,
-    TStateUpdaterName extends string
+    TStateUpdaterName extends string,
+    TProps
   >(
     stateName: TStateName,
     stateUpdaterName: TStateUpdaterName,
-    initialState: TState
-  ) => <TProps>(
-    props: TProps
+    initialState: TState | ((props: TProps) => TState),
+  ) => (
+    props: TProps,
   ) => TProps &
     { [stateName in TStateName]: TState } &
     { [stateUpdaterName in TStateUpdaterName]: (state: TState) => void }
