@@ -1,34 +1,48 @@
-import React from "react";
-import logo from "./logo.svg";
-import "./App.css";
-import { addState } from "ad-hok";
-import { get } from "lodash/fp";
+import React, { FC } from 'react'
+import { addState } from 'ad-hok'
+import { flow } from 'lodash/fp'
 
-const fOfP = <A, B>(a: A) => (b: B) => b;
+interface AddStateInitialStateAsCallbackProps {
+  name: string
+}
 
-const t = fOfP(1)(3);
-
-const testFunc = addState("name", "setName", "hello")({ someProps: 3 });
-
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const AddStateInitialStateAsCallback: FC<AddStateInitialStateAsCallbackProps> = flow(
+  addState('value', 'setValue', ({ name }) => 'name: ' + name),
+  // addState<number>('num', 'setNum'),
+  addState('num', 'setNum', undefined as number | undefined),
+  ({ name, value, num, setNum }) => (
+    <div>
+      <div>name: {name}</div>
+      <div>value: {value}</div>
+      <div>num: {num}</div>
+      <button
+        onClick={() =>
+          setNum(
+            // 'a' // correctly disallowed
+            3,
+          )
+        }
+      >
+        set num
+      </button>
     </div>
-  );
-};
+  ),
+)
 
-export default App;
+interface AppProps {
+  externalProp: string
+}
+
+const App: FC<AppProps> = flow(
+  addState('name', 'setName', 'hello'),
+  ({ name, setName, externalProp }) => (
+    <div>
+      <div>External prop: {externalProp}</div>
+      <div>Name: {name}</div>
+      <button onClick={() => setName('abc')}>set name</button>
+      <AddStateInitialStateAsCallback name={name} />
+    </div>
+  ),
+)
+
+export default App
