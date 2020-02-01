@@ -15,17 +15,11 @@ declare module 'ad-hok' {
     { [stateUpdaterName in TStateUpdaterName]: (state: TState) => void }
 
   declare const addState: AddStateType
-}
 
-// declare module "ad-hok" {
-//   declare function addState<
-//     TState,
-//     TStateName extends string,
-//     TStateUpdaterName extends string
-//   >(
-//     stateName: TStateName,
-//     stateUpdaterName: TStateUpdaterName,
-//     initialState: TState
-//   ): { [stateName in TStateName]: TState } &
-//     { [stateUpdaterName in TStateUpdaterName]: (state: TState) => void };
-// }
+  type AddPropsType = <TProps, AdditionalProps extends { [key: string]: any }>(
+    createProps: (props: TProps) => AdditionalProps,
+    dependencies?: Array<keyof TProps>,
+  ) => (props: TProps) => TProps & AdditionalProps
+
+  declare const addProps: AddPropsType
+}
