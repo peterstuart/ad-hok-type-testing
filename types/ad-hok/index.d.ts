@@ -24,8 +24,8 @@ declare module 'ad-hok' {
   declare const addEffect: AddEffectType
 
   type AddPropsType = <TProps, AdditionalProps extends { [key: string]: any }>(
-    createProps: (props: TProps) => AdditionalProps,
-    dependencies?: Array<keyof TProps>,
+    createProps: ((props: TProps) => AdditionalProps) | AdditionalProps,
+    dependencies?: Array<string>,
   ) => (props: TProps) => TProps & AdditionalProps
 
   declare const addProps: AddPropsType
