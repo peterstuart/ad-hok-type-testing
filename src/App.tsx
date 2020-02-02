@@ -40,6 +40,7 @@ const App: FC<AppProps> = flow(
       upperCaseName: ({ name, setName }) => () => setName(name.toUpperCase()),
       getStringLengthWithName: ({ name }) => (s: string) =>
         s.length + name.length,
+      multiParamHandler: () => (a: number, b: string) => a,
     },
     ['name'],
   ),

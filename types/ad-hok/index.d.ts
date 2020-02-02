@@ -17,7 +17,7 @@ declare module 'ad-hok' {
   declare const addState: AddStateType
 
   interface HandlerCreators<TProps> {
-    [key: string]: (props: TProps) => (arg: any) => any
+    [key: string]: (props: TProps) => (...arg: any[]) => any
   }
 
   type AddHandlersType = <Creators extends HandlerCreators<TProps>, TProps>(
