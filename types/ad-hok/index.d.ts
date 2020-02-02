@@ -18,7 +18,7 @@ declare module 'ad-hok' {
 
   type AddEffectType = <TProps>(
     callback: (props: TProps) => () => void,
-    dependencies?: Array<keyof TProps>,
+    dependencies?: Array<string>,
   ) => (props: TProps) => TProps
 
   declare const addEffect: AddEffectType
