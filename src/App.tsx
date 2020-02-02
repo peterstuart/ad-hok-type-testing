@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { addState, addProps, addEffect } from 'ad-hok'
+import { addState, addProps, addEffect, addHandlers } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -36,13 +36,31 @@ interface AppProps {
 
 const App: FC<AppProps> = flow(
   addState('name', 'setName', 'hello'),
+  addHandlers(
+    {
+      upperCaseName: ({ name, setName }) => () => setName(name.toUpperCase()),
+      getStringLengthWithName: ({ name }) => (s: string) =>
+        s.length + name.length,
+      multiParamHandler: () => (a: number, b: string) => a,
+    },
+    ['name'],
+  ),
   addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
-  ({ name, setName, externalProp, doubledName }) => (
+  ({
+    name,
+    setName,
+    externalProp,
+    doubledName,
+    upperCaseName,
+    getStringLengthWithName,
+  }) => (
     <div>
       <div>External prop: {externalProp}</div>
       <div>Name: {name}</div>
       <div>Doubled Name: {doubledName}</div>
       <button onClick={() => setName('abc')}>set name</button>
+      <button onClick={() => upperCaseName()}>uppercase name</button>
+      <div>Length of name + hello: {getStringLengthWithName('hello')}</div>
       <AddStateInitialStateAsCallback name={name} />
     </div>
   ),
