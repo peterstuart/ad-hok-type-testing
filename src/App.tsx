@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { addState, addProps } from 'ad-hok'
+import { addState, addProps, addEffect } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -10,6 +10,7 @@ const AddStateInitialStateAsCallback: FC<AddStateInitialStateAsCallbackProps> = 
   addState('value', 'setValue', ({ name }) => 'name: ' + name),
   // addState<number>('num', 'setNum'),
   addState('num', 'setNum', undefined as number | undefined),
+  addEffect(({ name }) => () => console.log(name), ['name']),
   ({ name, value, num, setNum }) => (
     <div>
       <div>name: {name}</div>

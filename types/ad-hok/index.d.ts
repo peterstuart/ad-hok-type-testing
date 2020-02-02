@@ -16,6 +16,13 @@ declare module 'ad-hok' {
 
   declare const addState: AddStateType
 
+  type AddEffectType = <TProps>(
+    callback: (props: TProps) => () => void,
+    dependencies?: Array<string>,
+  ) => (props: TProps) => TProps
+
+  declare const addEffect: AddEffectType
+
   type AddPropsType = <TProps, AdditionalProps extends { [key: string]: any }>(
     createProps: (props: TProps) => AdditionalProps,
     dependencies?: Array<keyof TProps>,
