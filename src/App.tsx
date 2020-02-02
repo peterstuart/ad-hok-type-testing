@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { addState, addHandlers } from 'ad-hok'
+import { addState, addProps, addEffect, addHandlers } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -10,6 +10,7 @@ const AddStateInitialStateAsCallback: FC<AddStateInitialStateAsCallbackProps> = 
   addState('value', 'setValue', ({ name }) => 'name: ' + name),
   // addState<number>('num', 'setNum'),
   addState('num', 'setNum', undefined as number | undefined),
+  addEffect(({ name }) => () => console.log(name), ['name']),
   ({ name, value, num, setNum }) => (
     <div>
       <div>name: {name}</div>
@@ -44,10 +45,19 @@ const App: FC<AppProps> = flow(
     },
     ['name'],
   ),
-  ({ name, setName, upperCaseName, getStringLengthWithName, externalProp }) => (
+  addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
+  ({
+    name,
+    setName,
+    externalProp,
+    doubledName,
+    upperCaseName,
+    getStringLengthWithName,
+  }) => (
     <div>
       <div>External prop: {externalProp}</div>
       <div>Name: {name}</div>
+      <div>Doubled Name: {doubledName}</div>
       <button onClick={() => setName('abc')}>set name</button>
       <button onClick={() => upperCaseName()}>uppercase name</button>
       <div>Length of name + hello: {getStringLengthWithName('hello')}</div>
