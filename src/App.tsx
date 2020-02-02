@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { addState, addEffect } from 'ad-hok'
+import { addState, addProps, addEffect } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -36,10 +36,12 @@ interface AppProps {
 
 const App: FC<AppProps> = flow(
   addState('name', 'setName', 'hello'),
-  ({ name, setName, externalProp }) => (
+  addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
+  ({ name, setName, externalProp, doubledName }) => (
     <div>
       <div>External prop: {externalProp}</div>
       <div>Name: {name}</div>
+      <div>Doubled Name: {doubledName}</div>
       <button onClick={() => setName('abc')}>set name</button>
       <AddStateInitialStateAsCallback name={name} />
     </div>
