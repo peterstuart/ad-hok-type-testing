@@ -5,6 +5,7 @@ import {
   addEffect,
   addHandlers,
   addStateHandlers,
+  flowMax,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
@@ -39,6 +40,10 @@ const AddStateInitialStateAsCallback: FC<AddStateInitialStateAsCallbackProps> = 
 interface AppProps {
   externalProp: string
 }
+
+const Max: FC = flowMax(addState('num', 'setNum', 0), ({ num }) => (
+  <div>num: {num}</div>
+))
 
 const App: FC<AppProps> = flow(
   addState('name', 'setName', 'hello'),
@@ -102,6 +107,7 @@ const App: FC<AppProps> = flow(
       <button onClick={() => incrementCounterBy(2)}>
         increment counter by 2
       </button>
+      <Max />
     </div>
   ),
 )
