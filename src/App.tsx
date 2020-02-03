@@ -11,6 +11,7 @@ import {
   addPropTypes,
   addRef,
   branch,
+  returns,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 import PropTypes from 'prop-types'
@@ -63,6 +64,10 @@ const Branch: FC = flowMax(
       passed: 3,
       // xyz: 'abc'
     }),
+  ),
+  branch(
+    ({ num }) => num < 4,
+    returns(({ num }) => <div>branched returns: {num}</div>),
   ),
   ({
     num,

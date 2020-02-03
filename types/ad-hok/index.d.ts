@@ -408,4 +408,10 @@ declare module 'ad-hok' {
   ) => (props: TProps) => LeftProps | RightProps
 
   declare const branch: BranchOneBranchType & BranchTwoBranchType
+
+  type ReturnsType = <TProps>(
+    callback: (props: TProps) => any,
+  ) => (props: TProps) => TProps
+
+  declare const returns: ReturnsType
 }
