@@ -368,4 +368,13 @@ declare module 'ad-hok' {
   ) => (props: TProps) => TProps & AdditionalProps
 
   declare const addWrapper: AddWrapperType
+
+  type AddWrapperPositionalArgsType = <AdditionalProps, TProps>(
+    callback: (
+      render: (additionalProps?: AdditionalProps) => ReactElement | null,
+      props: TProps,
+    ) => ReactElement | null,
+  ) => (props: TProps) => TProps & AdditionalProps
+
+  declare const addWrapperPositionalArgs: AddWrapperPositionalArgsType
 }
