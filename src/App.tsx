@@ -6,6 +6,7 @@ import {
   addHandlers,
   addStateHandlers,
   flowMax,
+  addWrapper,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
@@ -41,9 +42,30 @@ interface AppProps {
   externalProp: string
 }
 
-const Max: FC = flowMax(addState('num', 'setNum', 0), ({ num }) => (
-  <div>num: {num}</div>
-))
+// interface PropAddingAddWrapperOptions<TProps> {
+//   render: (additionalProps: { val: string }) => any
+//   props: TProps
+// }
+
+const Max: FC = flowMax(
+  addState('num', 'setNum', 0),
+  // addWrapper(({ render, props: { setNum } }: PropAddingAddWrapperOptions) => (
+  addWrapper(({ render, props: { setNum } }) => (
+    <div>
+      <button onClick={() => setNum(5)}>set num</button>
+      {// render({ val: 'val' })
+      render()}
+    </div>
+  )),
+  ({
+    num,
+    // val
+  }) => (
+    <>
+      <div>num: {num}</div>
+    </>
+  ),
+)
 
 const App: FC<AppProps> = flow(
   addState('name', 'setName', 'hello'),

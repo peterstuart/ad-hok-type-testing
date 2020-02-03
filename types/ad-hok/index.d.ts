@@ -1,5 +1,6 @@
 declare module 'ad-hok' {
   import { flow } from 'lodash/fp'
+  import { ReactElement } from 'react'
 
   type AddStateType = <
     TState,
@@ -358,4 +359,13 @@ declare module 'ad-hok' {
 
   // declare const flowMax: LodashFlow
   declare const flowMax: typeof flow
+
+  type AddWrapperType = <AdditionalProps, TProps>(
+    callback: (options: {
+      render: (additionalProps?: AdditionalProps) => ReactElement | null
+      props: TProps
+    }) => ReactElement | null,
+  ) => (props: TProps) => TProps & AdditionalProps
+
+  declare const addWrapper: AddWrapperType
 }
