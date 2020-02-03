@@ -377,4 +377,10 @@ declare module 'ad-hok' {
   ) => (props: TProps) => TProps & AdditionalProps
 
   declare const addWrapperPositionalArgs: AddWrapperPositionalArgsType
+
+  type AddPropTypesType = <TPropTypes, TProps>(
+    propTypes: TPropTypes,
+  ) => (props: TProps) => TProps
+
+  declare const addPropTypes: AddPropTypesType
 }
