@@ -12,8 +12,10 @@ import {
   addRef,
   branch,
   returns,
+  renderNothing,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
+import { constant } from 'lodash'
 import PropTypes from 'prop-types'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -65,6 +67,7 @@ const Branch: FC = flowMax(
       // xyz: 'abc'
     }),
   ),
+  branch(constant(true), renderNothing()),
   branch(
     ({ num }) => num < 4,
     returns(({ num }) => <div>branched returns: {num}</div>),

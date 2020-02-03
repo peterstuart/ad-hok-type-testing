@@ -414,4 +414,8 @@ declare module 'ad-hok' {
   ) => (props: TProps) => TProps
 
   declare const returns: ReturnsType
+
+  type RenderNothingType = <TProps>() => (props: TProps) => TProps
+
+  declare const renderNothing: RenderNothingType
 }
