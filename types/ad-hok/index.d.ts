@@ -36,7 +36,7 @@ declare module 'ad-hok' {
 
   type AddHandlersType = <Creators extends HandlerCreators<TProps>, TProps>(
     handlerCreators: Creators,
-    dependencies?: Array<keyof TProps>,
+    dependencies?: Array<string>,
   ) => (
     props: TProps,
   ) => TProps & { [K in keyof Creators]: ReturnType<Creators[K]> }
@@ -57,6 +57,7 @@ declare module 'ad-hok' {
   >(
     initialState: ((props: TProps) => TState) | TState,
     stateUpdaters: Updaters,
+    dependencies?: Array<string>,
   ) => (
     props: TProps,
   ) => TProps & TState & { [K in keyof Updaters]: ReturnType<Updaters[K]> }
