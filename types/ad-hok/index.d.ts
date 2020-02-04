@@ -396,16 +396,18 @@ declare module 'ad-hok' {
 
   declare const addPropTypes: AddPropTypesType
 
-  type BranchOneBranchType = <LeftProps, TProps>(
+  type BranchOneBranchType = <TProps>(
     test: (props: TProps) => boolean,
-    left: (props: TProps) => LeftProps,
-  ) => (props: TProps) => LeftProps
+    // left: (props: TProps) => LeftProps,
+    left: (props: TProps) => any,
+  ) => (props: TProps) => TProps
 
   type BranchTwoBranchType = <LeftProps, RightProps, TProps>(
     test: (props: TProps) => boolean,
     left: (props: TProps) => LeftProps,
     right: (props: TProps) => RightProps,
-  ) => (props: TProps) => LeftProps | RightProps
+  ) => // ) => (props: TProps) => LeftProps | RightProps
+  (props: TProps) => RightProps
 
   declare const branch: BranchOneBranchType & BranchTwoBranchType
 
