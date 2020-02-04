@@ -395,4 +395,29 @@ declare module 'ad-hok' {
   ) => (props: TProps) => TProps
 
   declare const addPropTypes: AddPropTypesType
+
+  type BranchOneBranchType = <TProps>(
+    test: (props: TProps) => boolean,
+    // left: (props: TProps) => LeftProps,
+    left: (props: TProps) => any,
+  ) => (props: TProps) => TProps
+
+  type BranchTwoBranchType = <LeftProps, RightProps, TProps>(
+    test: (props: TProps) => boolean,
+    left: (props: TProps) => LeftProps,
+    right: (props: TProps) => RightProps,
+  ) => // ) => (props: TProps) => LeftProps | RightProps
+  (props: TProps) => RightProps
+
+  declare const branch: BranchOneBranchType & BranchTwoBranchType
+
+  type ReturnsType = <TProps>(
+    callback: (props: TProps) => any,
+  ) => (props: TProps) => TProps
+
+  declare const returns: ReturnsType
+
+  type RenderNothingType = <TProps>() => (props: TProps) => TProps
+
+  declare const renderNothing: RenderNothingType
 }

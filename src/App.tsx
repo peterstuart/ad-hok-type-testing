@@ -10,8 +10,12 @@ import {
   // addWrapperPositionalArgs,
   addPropTypes,
   addRef,
+  branch,
+  returns,
+  renderNothing,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
+import { constant } from 'lodash'
 import PropTypes from 'prop-types'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -50,6 +54,34 @@ interface AppProps {
 //   render: (additionalProps: { val: string }) => any
 //   props: TProps
 // }
+
+const Branch: FC = flowMax(
+  addProps({
+    num: 3,
+  }),
+  branch(
+    ({ num }) => num > 2,
+    addProps({ passed: true }),
+    addProps({
+      passed: 3,
+      // xyz: 'abc'
+    }),
+  ),
+  branch(constant(true), renderNothing()),
+  branch(
+    ({ num }) => num < 4,
+    returns(({ num }) => <div>branched returns: {num}</div>),
+  ),
+  ({
+    num,
+    passed,
+    // xyz
+  }) => (
+    <div>
+      branch: {num} {passed}
+    </div>
+  ),
+)
 
 const Max: FC = flowMax(
   addState('num', 'setNum', 0),
@@ -145,6 +177,7 @@ const App: FC<AppProps> = flow(
         increment counter by 2
       </button>
       <Max />
+      <Branch />
     </div>
   ),
 )
