@@ -42,4 +42,20 @@ declare module 'ad-hok' {
   ) => TProps & { [K in keyof Creators]: ReturnType<Creators[K]> }
 
   declare const addHandlers: AddHandlersType
+
+  type AddCallbackType = <
+    TCallbackName extends string,
+    TProps,
+    TInput,
+    TOutput
+  >(
+    callbackName: TCallbackName,
+    callback: (props: TProps) => (...args: TInput) => TOutput,
+    dependencies?: Array<any>,
+  ) => (
+    props: TProps,
+  ) => TProps &
+    { [callbackName in TCallbackName]: (...args: TInput) => TOutput }
+
+  declare const addCallback: AddCallbackType
 }
