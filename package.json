@@ -23,7 +23,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "format": "prettier -c 'src/**/*.{ts,tsx}' 'types/**/*.{ts,tsx}'"
+    "format": "prettier -c 'src/**/*.{ts,tsx}' 'types/**/*.{ts,tsx}'",
+    "generateFlowMaxType": "node scripts/generateFlowmaxType.js > types/ad-hok/flowMax.d.ts && prettier --write types/ad-hok/flowMax.d.ts"
   },
   "eslintConfig": {
     "extends": "react-app"

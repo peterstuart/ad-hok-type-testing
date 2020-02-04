@@ -1,3 +1,5 @@
+/// <reference path="./flowMax.d.ts" />
+
 declare module 'ad-hok' {
   type AddStateType = <
     TState,
@@ -42,4 +44,6 @@ declare module 'ad-hok' {
   ) => TProps & { [K in keyof Creators]: ReturnType<Creators[K]> }
 
   declare const addHandlers: AddHandlersType
+
+  declare const flowMax: FlowMaxType
 }

@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { addState, addProps, addEffect, addHandlers } from 'ad-hok'
+import { addState, addProps, addEffect, addHandlers, flowMax } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -34,7 +34,7 @@ interface AppProps {
   externalProp: string
 }
 
-const App: FC<AppProps> = flow(
+const App: FC<AppProps> = flowMax(
   addState('name', 'setName', 'hello'),
   addHandlers(
     {
