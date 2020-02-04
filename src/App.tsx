@@ -5,6 +5,9 @@ import {
   addEffect,
   addHandlers,
   addStateHandlers,
+  flowMax,
+  addWrapper,
+  // addWrapperPositionalArgs,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
@@ -39,6 +42,33 @@ const AddStateInitialStateAsCallback: FC<AddStateInitialStateAsCallbackProps> = 
 interface AppProps {
   externalProp: string
 }
+
+// interface PropAddingAddWrapperOptions<TProps> {
+//   render: (additionalProps: { val: string }) => any
+//   props: TProps
+// }
+
+const Max: FC = flowMax(
+  addState('num', 'setNum', 0),
+  // addWrapper(({ render, props: { setNum } }: PropAddingAddWrapperOptions) => (
+  // addWrapperPositionalArgs((render: (additionalProps: { val: string }) => any, { setNum }) => (
+  addWrapper(({ render, props: { setNum } }) => (
+    <div>
+      <button onClick={() => setNum(5)}>set num</button>
+      {// render({ val: 'val' })
+      render()}
+    </div>
+  )),
+  ({
+    num,
+    // val
+  }) => (
+    <>
+      <div>num: {num}</div>
+      {/*<div>val: {val}</div>*/}
+    </>
+  ),
+)
 
 const App: FC<AppProps> = flow(
   addState('name', 'setName', 'hello'),
@@ -102,6 +132,7 @@ const App: FC<AppProps> = flow(
       <button onClick={() => incrementCounterBy(2)}>
         increment counter by 2
       </button>
+      <Max />
     </div>
   ),
 )
