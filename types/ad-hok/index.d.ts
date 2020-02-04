@@ -1,6 +1,7 @@
 declare module 'ad-hok' {
   import { flow } from 'lodash/fp'
   import { ReactElement } from 'react'
+  import { ValidationMap } from 'prop-types'
 
   type AddStateType = <
     TState,
@@ -377,4 +378,10 @@ declare module 'ad-hok' {
   ) => (props: TProps) => TProps & AdditionalProps
 
   declare const addWrapperPositionalArgs: AddWrapperPositionalArgsType
+
+  type AddPropTypesType = <TPropTypes, TProps>(
+    propTypes: ValidationMap<TPropTypes>,
+  ) => (props: TProps) => TProps
+
+  declare const addPropTypes: AddPropTypesType
 }

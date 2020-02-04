@@ -8,8 +8,10 @@ import {
   flowMax,
   addWrapper,
   // addWrapperPositionalArgs,
+  addPropTypes,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
+import PropTypes from 'prop-types'
 
 interface AddStateInitialStateAsCallbackProps {
   name: string
@@ -50,6 +52,10 @@ interface AppProps {
 
 const Max: FC = flowMax(
   addState('num', 'setNum', 0),
+  addPropTypes({
+    num: PropTypes.number.isRequired,
+    setNum: PropTypes.func.isRequired,
+  }),
   // addWrapper(({ render, props: { setNum } }: PropAddingAddWrapperOptions) => (
   // addWrapperPositionalArgs((render: (additionalProps: { val: string }) => any, { setNum }) => (
   addWrapper(({ render, props: { setNum } }) => (
