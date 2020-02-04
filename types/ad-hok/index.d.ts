@@ -1,6 +1,6 @@
 declare module 'ad-hok' {
   import { flow } from 'lodash/fp'
-  import { ReactElement } from 'react'
+  import { ReactElement, MutableRefObject } from 'react'
   import { ValidationMap } from 'prop-types'
 
   type AddStateType = <
@@ -35,6 +35,15 @@ declare module 'ad-hok' {
   ) => (props: TProps) => TProps & AdditionalProps
 
   declare const addProps: AddPropsType
+
+  type AddRefType = <TRefName extends string, TRef, TProps>(
+    refName: TRefName,
+    initialValue: TRef,
+  ) => (
+    props: TProps,
+  ) => TProps & { [refName in TRefName]: MutableRefObject<TRef> }
+
+  declare const addRef: AddRefType
 
   interface HandlerCreators<TProps> {
     [key: string]: (props: TProps) => (...args: any[]) => any

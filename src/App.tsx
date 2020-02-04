@@ -9,6 +9,7 @@ import {
   addWrapper,
   // addWrapperPositionalArgs,
   addPropTypes,
+  addRef,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 import PropTypes from 'prop-types'
@@ -88,6 +89,10 @@ const App: FC<AppProps> = flow(
     ['name'],
   ),
   addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
+  addRef('containerRef', null as HTMLDivElement | null),
+  addEffect(({ containerRef }) => () => {
+    console.log(containerRef.current?.clientLeft)
+  }),
   addProps({
     amountToIncrementBy: 4,
   }),
@@ -117,12 +122,13 @@ const App: FC<AppProps> = flow(
     doubledName,
     upperCaseName,
     getStringLengthWithName,
+    containerRef,
     counter,
     incrementCounterByProp,
     incrementCounter,
     incrementCounterBy,
   }) => (
-    <div>
+    <div ref={containerRef}>
       <div>External prop: {externalProp}</div>
       <div>Name: {name}</div>
       <div>Doubled Name: {doubledName}</div>
