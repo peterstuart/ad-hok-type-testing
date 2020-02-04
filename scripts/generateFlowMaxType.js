@@ -1,5 +1,4 @@
 const typeParameter = n => `T${n}`
-const parameterName = n => `f${n}`
 
 const generate = n => {
   if (n === 0) {
@@ -31,4 +30,5 @@ ${arities}
 }
 `
 
-console.log(interfaceString)
+process.stdout.write(interfaceString)
+
