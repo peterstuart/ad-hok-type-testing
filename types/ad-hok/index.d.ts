@@ -1,4 +1,6 @@
 declare module 'ad-hok' {
+  import { MutableRefObject } from 'react'
+
   type AddStateType = <
     TState,
     TStateName extends string,
@@ -43,12 +45,8 @@ declare module 'ad-hok' {
 
   declare const addHandlers: AddHandlersType
 
-  interface MutableRefObject<T> {
-    current: T
-  }
-
   type AddRefType = <TRefName extends string, TRef, TProps>(
-    refName: string,
+    refName: TRefName,
     initialValue: TRef,
   ) => (
     props: TProps,
