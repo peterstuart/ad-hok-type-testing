@@ -1,5 +1,11 @@
 import React, { FC } from 'react'
-import { addState, addProps, addEffect, addHandlers } from 'ad-hok'
+import {
+  addState,
+  addProps,
+  addEffect,
+  addHandlers,
+  addStateHandlers,
+} from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -46,6 +52,28 @@ const App: FC<AppProps> = flow(
     ['name'],
   ),
   addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
+  addProps({
+    amountToIncrementBy: 4,
+  }),
+  addStateHandlers(
+    {
+      counter: 0,
+      someUnusedState: null as string | null,
+    },
+    {
+      incrementCounter: ({ counter }) => () => ({
+        counter: counter + 1,
+      }),
+      incrementCounterBy: ({ counter }) => (amount: number) => ({
+        counter: counter + amount,
+      }),
+      incrementCounterByProp: ({ counter }, { amountToIncrementBy }) => () => ({
+        counter: counter + amountToIncrementBy,
+        // abc: 'd', // would be nice if this got flagged as "extra"
+        // someUnusedState: 4 // correctly errors
+      }),
+    },
+  ),
   ({
     name,
     setName,
@@ -53,6 +81,10 @@ const App: FC<AppProps> = flow(
     doubledName,
     upperCaseName,
     getStringLengthWithName,
+    counter,
+    incrementCounterByProp,
+    incrementCounter,
+    incrementCounterBy,
   }) => (
     <div>
       <div>External prop: {externalProp}</div>
@@ -62,6 +94,14 @@ const App: FC<AppProps> = flow(
       <button onClick={() => upperCaseName()}>uppercase name</button>
       <div>Length of name + hello: {getStringLengthWithName('hello')}</div>
       <AddStateInitialStateAsCallback name={name} />
+      <div>Counter: {counter}</div>
+      <button onClick={incrementCounterByProp}>
+        increment counter by prop
+      </button>
+      <button onClick={incrementCounter}>increment counter</button>
+      <button onClick={() => incrementCounterBy(2)}>
+        increment counter by 2
+      </button>
     </div>
   ),
 )

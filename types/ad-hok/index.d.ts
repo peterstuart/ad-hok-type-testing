@@ -31,15 +31,36 @@ declare module 'ad-hok' {
   declare const addProps: AddPropsType
 
   interface HandlerCreators<TProps> {
-    [key: string]: (props: TProps) => (...arg: any[]) => any
+    [key: string]: (props: TProps) => (...args: any[]) => any
   }
 
   type AddHandlersType = <Creators extends HandlerCreators<TProps>, TProps>(
     handlerCreators: Creators,
-    dependencies?: Array<keyof TProps>,
+    dependencies?: Array<string>,
   ) => (
     props: TProps,
   ) => TProps & { [K in keyof Creators]: ReturnType<Creators[K]> }
 
   declare const addHandlers: AddHandlersType
+
+  interface StateUpdaters<TProps, TState> {
+    [key: string]: (
+      state: TState,
+      props: TProps,
+    ) => (...args: any[]) => Partial<TState>
+  }
+
+  type AddStateHandlersType = <
+    Updaters extends StateUpdaters<TProps, TState>,
+    TProps,
+    TState
+  >(
+    initialState: ((props: TProps) => TState) | TState,
+    stateUpdaters: Updaters,
+    dependencies?: Array<string>,
+  ) => (
+    props: TProps,
+  ) => TProps & TState & { [K in keyof Updaters]: ReturnType<Updaters[K]> }
+
+  declare const addStateHandlers: AddStateHandlersType
 }
