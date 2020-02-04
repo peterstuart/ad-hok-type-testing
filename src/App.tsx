@@ -1,4 +1,4 @@
-import React, { FC, createContext } from 'react'
+import React, { FC, createContext, ComponentType } from 'react'
 import {
   addState,
   addProps,
@@ -14,6 +14,8 @@ import {
   returns,
   renderNothing,
   addContext,
+  addWrapperHOC,
+  PropAddingHOCType,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 import { constant } from 'lodash'
@@ -88,6 +90,10 @@ const FooContext = createContext({
   bar: 'bar',
 })
 
+const withX = <TProps extends {}>(Component: ComponentType<TProps>) => (
+  props: TProps,
+) => <Component {...props} x={4} />
+
 const Max: FC = flowMax(
   addState('num', 'setNum', 0),
   addPropTypes({
@@ -106,15 +112,18 @@ const Max: FC = flowMax(
     </FooContext.Provider>
   )),
   addContext(FooContext, 'foo'),
+  addWrapperHOC(withX as PropAddingHOCType<{ x: number }>),
   ({
     num,
     // val,
     foo: { bar },
+    x,
   }) => (
     <>
       <div>num: {num}</div>
       {/*<div>val: {val}</div>*/}
       <div>bar: {bar}</div>
+      <div>x: {x}</div>
     </>
   ),
 )
