@@ -23,6 +23,8 @@ declare module 'ad-hok' {
 
   declare const addEffect: AddEffectType
 
+  declare const addLayoutEffect: AddEffectType
+
   type AddPropsType = <TProps, AdditionalProps extends { [key: string]: any }>(
     createProps: ((props: TProps) => AdditionalProps) | AdditionalProps,
     dependencies?: Array<string>,
