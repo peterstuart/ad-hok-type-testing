@@ -1,6 +1,22 @@
 import React, { FC } from 'react'
-import { addState, addProps, addEffect, addHandlers, flowMax } from 'ad-hok'
+import {
+  addState,
+  addProps,
+  addEffect,
+  addHandlers,
+  addStateHandlers,
+  flowMax,
+  addWrapper,
+  // addWrapperPositionalArgs,
+  addPropTypes,
+  addRef,
+  branch,
+  returns,
+  renderNothing,
+} from 'ad-hok'
 import { flow } from 'lodash/fp'
+import { constant } from 'lodash'
+import PropTypes from 'prop-types'
 
 interface AddStateInitialStateAsCallbackProps {
   name: string
@@ -34,7 +50,66 @@ interface AppProps {
   externalProp: string
 }
 
-const App: FC<AppProps> = flowMax(
+// interface PropAddingAddWrapperOptions<TProps> {
+//   render: (additionalProps: { val: string }) => any
+//   props: TProps
+// }
+
+const Branch: FC = flowMax(
+  addProps({
+    num: 3,
+  }),
+  branch(
+    ({ num }) => num > 2,
+    addProps({ passed: true }),
+    addProps({
+      passed: 3,
+      // xyz: 'abc'
+    }),
+  ),
+  branch(constant(true), renderNothing()),
+  branch(
+    ({ num }) => num < 4,
+    returns(({ num }) => <div>branched returns: {num}</div>),
+  ),
+  ({
+    num,
+    passed,
+    // xyz
+  }) => (
+    <div>
+      branch: {num} {passed}
+    </div>
+  ),
+)
+
+const Max: FC = flowMax(
+  addState('num', 'setNum', 0),
+  addPropTypes({
+    num: PropTypes.number.isRequired,
+    setNum: PropTypes.func.isRequired,
+  }),
+  // addWrapper(({ render, props: { setNum } }: PropAddingAddWrapperOptions) => (
+  // addWrapperPositionalArgs((render: (additionalProps: { val: string }) => any, { setNum }) => (
+  addWrapper(({ render, props: { setNum } }) => (
+    <div>
+      <button onClick={() => setNum(5)}>set num</button>
+      {// render({ val: 'val' })
+      render()}
+    </div>
+  )),
+  ({
+    num,
+    // val
+  }) => (
+    <>
+      <div>num: {num}</div>
+      {/*<div>val: {val}</div>*/}
+    </>
+  ),
+)
+
+const App: FC<AppProps> = flow(
   addState('name', 'setName', 'hello'),
   addHandlers(
     {
@@ -46,6 +121,32 @@ const App: FC<AppProps> = flowMax(
     ['name'],
   ),
   addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
+  addRef('containerRef', null as HTMLDivElement | null),
+  addEffect(({ containerRef }) => () => {
+    console.log(containerRef.current?.clientLeft)
+  }),
+  addProps({
+    amountToIncrementBy: 4,
+  }),
+  addStateHandlers(
+    {
+      counter: 0,
+      someUnusedState: null as string | null,
+    },
+    {
+      incrementCounter: ({ counter }) => () => ({
+        counter: counter + 1,
+      }),
+      incrementCounterBy: ({ counter }) => (amount: number) => ({
+        counter: counter + amount,
+      }),
+      incrementCounterByProp: ({ counter }, { amountToIncrementBy }) => () => ({
+        counter: counter + amountToIncrementBy,
+        // abc: 'd', // would be nice if this got flagged as "extra"
+        // someUnusedState: 4 // correctly errors
+      }),
+    },
+  ),
   ({
     name,
     setName,
@@ -53,8 +154,13 @@ const App: FC<AppProps> = flowMax(
     doubledName,
     upperCaseName,
     getStringLengthWithName,
+    containerRef,
+    counter,
+    incrementCounterByProp,
+    incrementCounter,
+    incrementCounterBy,
   }) => (
-    <div>
+    <div ref={containerRef}>
       <div>External prop: {externalProp}</div>
       <div>Name: {name}</div>
       <div>Doubled Name: {doubledName}</div>
@@ -62,6 +168,16 @@ const App: FC<AppProps> = flowMax(
       <button onClick={() => upperCaseName()}>uppercase name</button>
       <div>Length of name + hello: {getStringLengthWithName('hello')}</div>
       <AddStateInitialStateAsCallback name={name} />
+      <div>Counter: {counter}</div>
+      <button onClick={incrementCounterByProp}>
+        increment counter by prop
+      </button>
+      <button onClick={incrementCounter}>increment counter</button>
+      <button onClick={() => incrementCounterBy(2)}>
+        increment counter by 2
+      </button>
+      <Max />
+      <Branch />
     </div>
   ),
 )

@@ -1,6 +1,9 @@
 /// <reference path="./flowMax.d.ts" />
 
 declare module 'ad-hok' {
+  import { ReactElement, MutableRefObject } from 'react'
+  import { ValidationMap } from 'prop-types'
+
   type AddStateType = <
     TState,
     TStateName extends string,
@@ -25,6 +28,8 @@ declare module 'ad-hok' {
 
   declare const addEffect: AddEffectType
 
+  declare const addLayoutEffect: AddEffectType
+
   type AddPropsType = <TProps, AdditionalProps extends { [key: string]: any }>(
     createProps: ((props: TProps) => AdditionalProps) | AdditionalProps,
     dependencies?: Array<string>,
@@ -32,18 +37,97 @@ declare module 'ad-hok' {
 
   declare const addProps: AddPropsType
 
+  type AddRefType = <TRefName extends string, TRef, TProps>(
+    refName: TRefName,
+    initialValue: TRef,
+  ) => (
+    props: TProps,
+  ) => TProps & { [refName in TRefName]: MutableRefObject<TRef> }
+
+  declare const addRef: AddRefType
+
   interface HandlerCreators<TProps> {
-    [key: string]: (props: TProps) => (...arg: any[]) => any
+    [key: string]: (props: TProps) => (...args: any[]) => any
   }
 
   type AddHandlersType = <Creators extends HandlerCreators<TProps>, TProps>(
     handlerCreators: Creators,
-    dependencies?: Array<keyof TProps>,
+    dependencies?: Array<string>,
   ) => (
     props: TProps,
   ) => TProps & { [K in keyof Creators]: ReturnType<Creators[K]> }
 
   declare const addHandlers: AddHandlersType
+
+  interface StateUpdaters<TProps, TState> {
+    [key: string]: (
+      state: TState,
+      props: TProps,
+    ) => (...args: any[]) => Partial<TState>
+  }
+
+  type AddStateHandlersType = <
+    Updaters extends StateUpdaters<TProps, TState>,
+    TProps,
+    TState
+  >(
+    initialState: ((props: TProps) => TState) | TState,
+    stateUpdaters: Updaters,
+    dependencies?: Array<string>,
+  ) => (
+    props: TProps,
+  ) => TProps & TState & { [K in keyof Updaters]: ReturnType<Updaters[K]> }
+
+  declare const addStateHandlers: AddStateHandlersType
+
+  type AddWrapperType = <AdditionalProps, TProps>(
+    callback: (options: {
+      render: (additionalProps?: AdditionalProps) => ReactElement | null
+      props: TProps
+    }) => ReactElement | null,
+  ) => (props: TProps) => TProps & AdditionalProps
+
+  declare const addWrapper: AddWrapperType
+
+  type AddWrapperPositionalArgsType = <AdditionalProps, TProps>(
+    callback: (
+      render: (additionalProps?: AdditionalProps) => ReactElement | null,
+      props: TProps,
+    ) => ReactElement | null,
+  ) => (props: TProps) => TProps & AdditionalProps
+
+  declare const addWrapperPositionalArgs: AddWrapperPositionalArgsType
+
+  type AddPropTypesType = <TPropTypes, TProps>(
+    propTypes: ValidationMap<TPropTypes>,
+  ) => (props: TProps) => TProps
+
+  declare const addPropTypes: AddPropTypesType
+
+  type BranchOneBranchType = <TProps>(
+    test: (props: TProps) => boolean,
+    // left: (props: TProps) => LeftProps,
+    left: (props: TProps) => any,
+  ) => (props: TProps) => TProps
+
+  type BranchTwoBranchType = <LeftProps, RightProps, TProps>(
+    test: (props: TProps) => boolean,
+    left: (props: TProps) => LeftProps,
+    right: (props: TProps) => RightProps,
+  ) => // ) => (props: TProps) => LeftProps | RightProps
+  (props: TProps) => RightProps
+
+  declare const branch: BranchOneBranchType & BranchTwoBranchType
+
+  type ReturnsType = <TProps>(
+    callback: (props: TProps) => any,
+  ) => (props: TProps) => TProps
+
+  declare const returns: ReturnsType
+
+  type RenderNothingType = <TProps>() => (props: TProps) => TProps
+
+  declare const renderNothing: RenderNothingType
 
   declare const flowMax: FlowMaxType
 }
