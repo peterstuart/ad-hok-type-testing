@@ -42,4 +42,17 @@ declare module 'ad-hok' {
   ) => TProps & { [K in keyof Creators]: ReturnType<Creators[K]> }
 
   declare const addHandlers: AddHandlersType
+
+  interface MutableRefObject<T> {
+    current: T
+  }
+
+  type AddRefType = <TRefName extends string, TRef, TProps>(
+    refName: string,
+    initialValue: TRef,
+  ) => (
+    props: TProps,
+  ) => TProps & { [refName in TRefName]: MutableRefObject<TRef> }
+
+  declare const addRef: AddRefType
 }

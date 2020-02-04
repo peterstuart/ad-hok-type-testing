@@ -1,5 +1,5 @@
 import React, { FC } from 'react'
-import { addState, addProps, addEffect, addHandlers } from 'ad-hok'
+import { addState, addProps, addEffect, addHandlers, addRef } from 'ad-hok'
 import { flow } from 'lodash/fp'
 
 interface AddStateInitialStateAsCallbackProps {
@@ -46,6 +46,10 @@ const App: FC<AppProps> = flow(
     ['name'],
   ),
   addProps(({ name }) => ({ doubledName: `${name} ${name}` }), ['name']),
+  addRef('containerRef', null as HTMLDivElement | null),
+  addEffect(({ containerRef }) => () => {
+    console.log(containerRef.current?.clientLeft)
+  }),
   ({
     name,
     setName,
@@ -53,8 +57,9 @@ const App: FC<AppProps> = flow(
     doubledName,
     upperCaseName,
     getStringLengthWithName,
+    containerRef,
   }) => (
-    <div>
+    <div ref={containerRef}>
       <div>External prop: {externalProp}</div>
       <div>Name: {name}</div>
       <div>Doubled Name: {doubledName}</div>
