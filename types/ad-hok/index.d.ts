@@ -1,7 +1,7 @@
 /// <reference path="./flowMax.d.ts" />
 
 declare module 'ad-hok' {
-  import { ReactElement, MutableRefObject, Context } from 'react'
+  import { ReactElement, MutableRefObject, Context, ComponentType } from 'react'
   import { ValidationMap } from 'prop-types'
 
   type AddStateType = <
@@ -137,4 +137,20 @@ declare module 'ad-hok' {
   declare const renderNothing: RenderNothingType
 
   declare const flowMax: FlowMaxType
+
+  // type AddWrapperHOCType = <AddedProps, TProps>(
+  //   hoc: (
+  //     component: ComponentType<TProps>,
+  //   ) => ComponentType<EnhancedProps & AddedProps>,
+  // ) => (props: TProps) => TProps & AddedProps
+
+  export type PropAddingHOCType<AddedProps> = (
+    component: ComponentType<any>,
+  ) => ComponentType<any>
+
+  type AddWrapperHOCType = <AddedProps, TProps>(
+    hoc: PropAddingHOCType<AddedProps>,
+  ) => (props: TProps) => TProps & AddedProps
+
+  declare const addWrapperHOC: AddWrapperHOCType
 }
