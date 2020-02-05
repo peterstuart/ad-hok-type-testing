@@ -1,4 +1,4 @@
-import React, { FC } from 'react'
+import React, { FC, createContext } from 'react'
 import {
   addState,
   addProps,
@@ -13,6 +13,7 @@ import {
   branch,
   returns,
   renderNothing,
+  addContext,
 } from 'ad-hok'
 import { flow } from 'lodash/fp'
 import { constant } from 'lodash'
@@ -83,6 +84,10 @@ const Branch: FC = flowMax(
   ),
 )
 
+const FooContext = createContext({
+  bar: 'bar',
+})
+
 const Max: FC = flowMax(
   addState('num', 'setNum', 0),
   addPropTypes({
@@ -92,19 +97,24 @@ const Max: FC = flowMax(
   // addWrapper(({ render, props: { setNum } }: PropAddingAddWrapperOptions) => (
   // addWrapperPositionalArgs((render: (additionalProps: { val: string }) => any, { setNum }) => (
   addWrapper(({ render, props: { setNum } }) => (
-    <div>
-      <button onClick={() => setNum(5)}>set num</button>
-      {// render({ val: 'val' })
-      render()}
-    </div>
+    <FooContext.Provider value={{ bar: 'barVal' }}>
+      <div>
+        <button onClick={() => setNum(5)}>set num</button>
+        {// render({ val: 'val' })
+        render()}
+      </div>
+    </FooContext.Provider>
   )),
+  addContext(FooContext, 'foo'),
   ({
     num,
-    // val
+    // val,
+    foo: { bar },
   }) => (
     <>
       <div>num: {num}</div>
       {/*<div>val: {val}</div>*/}
+      <div>bar: {bar}</div>
     </>
   ),
 )

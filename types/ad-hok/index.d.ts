@@ -1,7 +1,7 @@
 /// <reference path="./flowMax.d.ts" />
 
 declare module 'ad-hok' {
-  import { ReactElement, MutableRefObject } from 'react'
+  import { ReactElement, MutableRefObject, Context } from 'react'
   import { ValidationMap } from 'prop-types'
 
   type AddStateType = <
@@ -45,6 +45,13 @@ declare module 'ad-hok' {
   ) => TProps & { [refName in TRefName]: MutableRefObject<TRef> }
 
   declare const addRef: AddRefType
+
+  type AddContextType = <TContextName extends string, TContext, TProps>(
+    context: Context<TContext>,
+    contextName: TContextName,
+  ) => (props: TProps) => TProps & { [contextName in TContextName]: TContext }
+
+  declare const addContext: AddContextType
 
   interface HandlerCreators<TProps> {
     [key: string]: (props: TProps) => (...args: any[]) => any
